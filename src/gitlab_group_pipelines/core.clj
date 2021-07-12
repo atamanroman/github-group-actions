@@ -63,4 +63,4 @@
       (exit-with-usage))))
 
 (defn -main [& args] (let [gitlab-options (parse-args args)]
-                       (start-pipelines gitlab-options (get-projects gitlab-options))))
+                       (doall (start-pipelines gitlab-options (get-projects gitlab-options)))))
