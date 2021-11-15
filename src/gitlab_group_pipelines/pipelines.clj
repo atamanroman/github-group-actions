@@ -6,9 +6,9 @@
 (defn log-pipeline [project & status]
   (apply println (conj status (str "Pipeline for " (:name project) "/" (:default_branch project) ":"))))
 
-(defn start-pipeline [{:keys [:gitlab-url :gitlab-token :dry-run]} project]
+(defn start-pipeline [{access-token "<access-token>" api-url "<api-url>" dry-run "--dry-run"} project]
   (try
-    (let [resp (api/post gitlab-token pipeline-url [gitlab-url (:id project) (:default_branch project)] dry-run)
+    (let [resp (api/post access-token pipeline-url [api-url (:id project) (:default_branch project)] dry-run)
           body (:body resp)
           pipeline (:web_url [body])]
       (do (log-pipeline project "CREATED @" pipeline)

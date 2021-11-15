@@ -3,5 +3,9 @@
             [gitlab-group-pipelines.pipelines :as pipelines]
             [gitlab-group-pipelines.projects :as projects]))
 
-(defn -main [& args] (let [gitlab-options (cli/parse-args args)]
-                       (doall (pipelines/start-pipelines gitlab-options (projects/get-projects gitlab-options)))))
+(defn -main [& args] (let [params (cli/parse-args args)]
+                       (cond
+                         (params "goodbye") (System/exit (params "goodbye"))
+                         (params "start-pipeline") (doall (pipelines/start-pipelines params (projects/get-projects params)))
+                         :else (throw (new IllegalStateException "Not implemented yet!"))
+                         )))

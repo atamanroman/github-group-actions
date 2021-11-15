@@ -1,7 +1,7 @@
 (ns gitlab-group-pipelines.api
   (:require [clj-http.client :as client]))
 
-(defn- auth-header [gitlab-token] {:private-token gitlab-token})
+(defn- auth-header [gitlab-token] {"<gitlab-token>" gitlab-token})
 
 ; TODO handle paging
 (defn get [gitlab-token url-template params]
