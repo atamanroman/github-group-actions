@@ -1,7 +1,7 @@
-(ns gitlab-group-pipelines.core
-  (:require [gitlab-group-pipelines.cli :as cli]
-            [gitlab-group-pipelines.pipelines :as pipelines]
-            [gitlab-group-pipelines.projects :as projects]))
+(ns gitlab-group-actions.core
+  (:require [gitlab-group-actions.cli :as cli]
+            [gitlab-group-actions.pipelines :as pipelines]
+            [gitlab-group-actions.projects :as projects]) (:gen-class))
 
 (defn -main [& raw] (let [opts (cli/parse-args raw)]
                       (cond

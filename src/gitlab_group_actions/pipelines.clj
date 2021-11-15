@@ -1,5 +1,5 @@
-(ns gitlab-group-pipelines.pipelines
-  (:require [gitlab-group-pipelines.api :as api]))
+(ns gitlab-group-actions.pipelines
+  (:require [gitlab-group-actions.api :as api]))
 
 (def pipeline-url "%s/projects/%d/pipeline?ref=%s")
 

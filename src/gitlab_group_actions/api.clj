@@ -1,4 +1,4 @@
-(ns gitlab-group-pipelines.api
+(ns gitlab-group-actions.api
   (:require [clj-http.client :as client]))
 
 (defn- auth-header [gitlab-token] {"<gitlab-token>" gitlab-token})

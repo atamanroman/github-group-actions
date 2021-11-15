@@ -1,17 +1,18 @@
-# gitlab-group-pipelines
+# gitlab-group-actions
 
-Start a pipeline for the default branch for every project in a given group.
+Run actions against all repos in a gitlab group (and subgroups).
+
+Features:
+
+- start a pipeline for a given branch (or default)
+- create a tag on a given branch (or default)
+
+## Requirements
+
+`$ brew install clojure leiningen`
 
 ## Usage
 
-`$ lein run -- [--dry-run] <gitlab-url> <groupid> <gitlab-token>`
+This tool is documented with [docopt](http://docopt.org/).
 
-```sh
-# creates pipelines for every project in group with id=35
-$ lein run -- https://git.fundsaccess.eu 35 $TOKEN
-```
-
-```shell
-# shows which pipelines would be created
-$ lein run -- --dry-run https://git.fundsaccess.eu 35 $TOKEN
-```
+Run `$ lein run --` to see the docs.

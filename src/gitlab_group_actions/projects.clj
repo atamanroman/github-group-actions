@@ -1,5 +1,5 @@
-(ns gitlab-group-pipelines.projects
-  (:require [gitlab-group-pipelines.api :as api]))
+(ns gitlab-group-actions.projects
+  (:require [gitlab-group-actions.api :as api]))
 
 (defn get-projects
   ([gitlab-options] (get-projects gitlab-options 1))
