@@ -1,14 +1,14 @@
 (ns gitlab-group-actions.pipelines
   (:require [gitlab-group-actions.api :as api]))
 
-(def pipeline-url "%s/projects/%d/pipeline?ref=%s")
+(def pipeline-endpoint "%s/projects/%d/pipeline?ref=%s")
 
 (defn log-pipeline [project & status]
   (apply println (conj status (str "Pipeline for " (:name project) "/" (:default_branch project) ":"))))
 
 (defn start-pipeline [{:keys [:access-token :api-url :dry-run]} project]
   (try
-    (let [resp (api/post access-token pipeline-url [api-url (:id project) (:default_branch project)] dry-run)
+    (let [resp (api/post access-token pipeline-endpoint [api-url (:id project) (:default_branch project)] dry-run)
           body (:body resp)
           pipeline (:web_url [body])]
       (do (log-pipeline project "CREATED @" pipeline)

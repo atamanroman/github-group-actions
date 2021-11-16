@@ -5,36 +5,28 @@
 (deftest version
   (testing "-v"
     (let [args (parse-args ["-v"])]
-      (is (= (:exit-status args) 0))
-      (is (= (:action args) :exit)))
-    )
+      (is (= (:action args) :exit))
+      (is (= (:exit-status args) 0))))
   (testing "--version"
     (let [args (parse-args ["--version"])]
-      (is (= (:exit-status args) 0))
-      (is (= (:action args) :exit)))
-    )
-  )
+      (is (= (:action args) :exit))
+      (is (= (:exit-status args) 0)))))
 
 (deftest help
   (testing "-h"
     (let [args (parse-args ["-h"])]
-      (is (= (:exit-status args) 0))
       (is (= (:action args) :exit))
-      ))
+      (is (= (:exit-status args) 0))))
 
   (testing "--help"
     (let [args (parse-args ["-h"])]
-      (is (= (:exit-status args) 0))
-      (is (= (:action args) :exit)))
-    )
-  )
+      (is (= (:action args) :exit))
+      (is (= (:exit-status args) 0)))))
 
 (deftest bad-input
   (let [args (parse-args ["foo"])]
-    (is (= (:exit-status args) 1))
     (is (= (:action args) :exit))
-    )
-  )
+    (is (= (:exit-status args) 1))))
 
 (deftest start-pipeline
   (testing "--dry-run"
@@ -45,11 +37,10 @@
       (is (= (:api-url args) "a"))
       (is (= (:group-id args) "b"))
       (is (= (:access-token args) "c"))
-      (is (nil? (:exit-status args)))
-      )
-    )
+      (is (= (:branch args) ":default"))
+      (is (nil? (:exit-status args)))))
 
-  (testing "recursive"
+  (testing "-r"
     (let [args (parse-args ["start-pipeline" "a" "b" "c" "-r"])]
       (is (= (:dry-run args) false))
       (is (= (:action args) :start-pipeline))
@@ -57,7 +48,24 @@
       (is (= (:api-url args) "a"))
       (is (= (:group-id args) "b"))
       (is (= (:access-token args) "c"))
-      (is (nil? (:exit-status args)))
-      )
-    )
-  )
+      (is (= (:branch args) ":default"))
+      (is (nil? (:exit-status args)))))
+
+  (testing "create-tag args are not set"
+    (let [args (parse-args ["start-pipeline" "a" "b" "c"])]
+      (is (nil? (:tag-name args)))
+      (is (nil? (:tag-message args))))))
+
+(deftest create-tag
+  (testing "create-tag"
+    (let [args (parse-args ["create-tag" "1.2.3" "Release 1.2.3" "a" "b" "c"])]
+      (is (= (:action args) :create-tag))
+      (is (= (:tag-name args) "1.2.3"))
+      (is (= (:tag-message args) "Release 1.2.3"))
+      (is (= (:recursive args) false))
+      (is (= (:dry-run args) false))
+      (is (= (:api-url args) "a"))
+      (is (= (:group-id args) "b"))
+      (is (= (:access-token args) "c"))
+      (is (= (:branch args) ":default"))
+      (is (nil? (:exit-status args))))))
