@@ -7,7 +7,7 @@
                             :recursive    (or (arg-map "--recursive") false)
                             :dry-run      (or (arg-map "--dry-run") false)
                             :branch       (arg-map "--branch")
-                            :exit-status  (or (arg-map "exit-status") 1)
+                            :exit-status  (or (arg-map "exit-status") nil)
                             :action       (cond (arg-map "start-pipeline") :start-pipeline
                                                 (arg-map "create-tag") :create-tag
                                                 :else :exit)})
@@ -30,7 +30,7 @@ Options:
   parse-args [args]
   (let [arg-map (docopt (:doc (meta #'parse-args)) args)]
     (cond
-      (nil? arg-map) (do (println (:doc (meta #'parse-args))) (normalize (assoc arg-map "exit-status" 1)))
+      (nil? arg-map) (normalize (assoc arg-map "exit-status" 1))
       (arg-map "--help") (do (println (:doc (meta #'parse-args))) (normalize (assoc arg-map "exit-status" 0)))
       (arg-map "--version") (do (println (:version (meta #'parse-args))) (normalize (assoc arg-map "exit-status" 0)))
       :else (normalize arg-map))))
