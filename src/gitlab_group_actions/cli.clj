@@ -3,10 +3,10 @@
 
 (defn- normalize [arg-map] {:access-token (arg-map "<access-token>")
                             :action       (cond (arg-map "start-pipeline") :start-pipeline
-                                                (arg-map "create-tag") :create-tag
-                                                :else :exit)
+                                                (arg-map "create-tag") :create-tag :else :exit)
                             :api-url      (arg-map "<api-url>")
-                            :branch       (arg-map "--branch")
+                            :branch       (cond (= (arg-map "--branch") ":default") :default
+                                                :else (arg-map "--branch"))
                             :dry-run      (or (arg-map "--dry-run") false)
                             :exit-status  (or (arg-map "exit-status") nil)
                             :group-id     (arg-map "<group-id>")
