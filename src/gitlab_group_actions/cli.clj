@@ -8,8 +8,8 @@
                             :branch       (cond (= (arg-map "--branch") ":default") :default
                                                 :else (arg-map "--branch"))
                             :dry-run      (or (arg-map "--dry-run") false)
-                            :exit-status  (or (arg-map "exit-status") nil)
-                            :group-id     (arg-map "<group-id>")
+                            :exit-status  (arg-map "exit-status")
+                            :group-id     (if (arg-map "<group-id>") (Integer/parseInt (arg-map "<group-id>")))
                             :recursive    (or (arg-map "--recursive") false)
                             :tag-name     (arg-map "<name>")
                             :tag-message  (arg-map "<message>")})
@@ -30,7 +30,7 @@ Options:
   -h, --help                      Show this screen.
   -v, --version                   Show version."
          :version "Gitlab Group Actions, version 0.1.0-SNAPSHOT"} ; TODO dynamic from project?
-        parse-args [args]
+  parse-args [args]
   (let [arg-map (docopt (:doc (meta #'parse-args)) args)]
     (cond
       (nil? arg-map) (normalize (assoc arg-map "exit-status" 1))
