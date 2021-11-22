@@ -1,5 +1,6 @@
 (ns gitlab-group-actions.api
-  (:require [clj-http.client :as client])
+  (:require [clj-http.client :as client]
+            [clojure.tools.logging.readable :as log])
   (:import (java.net URLEncoder)
            (java.nio.charset StandardCharsets)))
 
@@ -19,18 +20,23 @@
 
 ; TODO handle paging
 (defn get [gitlab-token url-template url-params]
-  (client/get (build-url url-template url-params)
-              {:as      :json
-               :headers (auth-header gitlab-token)}))
+  (let [url (build-url url-template url-params)]
+    (do (log/debugf "GET %s" url)
+        (client/get url
+                    {:as      :json
+                     :headers (auth-header gitlab-token)}))))
 
 ; TODO body
 (defn post
   ([gitlab-token url-template url-params dry-run]
-   (if dry-run
-     (println "POST" (build-url url-template url-params) "(dry-run)")
-     (client/post (build-url url-template url-params)
-                  {:as      :json
-                   :headers (auth-header gitlab-token)})))
+   (let [url (build-url url-template url-params)]
+     (if dry-run
+       (log/debugf "POST %s (dry run)" url)
+
+       (do (log/debugf "POST %s" url)
+           (client/post url
+                        {:as      :json
+                         :headers (auth-header gitlab-token)})))))
   ([gitlab-token url-template [params]]
    (post gitlab-token url-template params false)))
 
