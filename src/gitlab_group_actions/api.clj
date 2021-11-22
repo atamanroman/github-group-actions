@@ -1,4 +1,5 @@
 (ns gitlab-group-actions.api
+  (:refer-clojure :exclude [get])
   (:require [clj-http.client :as client]
             [clojure.tools.logging.readable :as log])
   (:import (java.net URLEncoder)
