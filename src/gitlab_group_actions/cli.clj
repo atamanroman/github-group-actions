@@ -30,7 +30,7 @@ Options:
   -h, --help                      Show this screen.
   -v, --version                   Show version."
          :version "Gitlab Group Actions, version 0.1.0-SNAPSHOT"} ; TODO dynamic from project?
-  parse-args [args]
+        parse-args [args]
   (let [arg-map (docopt (:doc (meta #'parse-args)) args)]
     (cond
       (nil? arg-map) (normalize (assoc arg-map "exit-status" 1))
