@@ -1,6 +1,7 @@
 (ns gitlab-group-actions.cli-test
   (:require [clojure.test :refer :all]
-            [gitlab-group-actions.cli :refer :all]))
+            [gitlab-group-actions.cli :refer :all]
+            [clojure.java.io :as io]))
 
 (deftest version
   (testing "-v"
@@ -54,7 +55,13 @@
   (testing "create-tag args are not set"
     (let [args (parse-args ["start-pipeline" "a" "123" "c"])]
       (is (nil? (:tag-name args)))
-      (is (nil? (:tag-message args))))))
+      (is (nil? (:tag-message args)))))
+
+  (testing "exclude-file is read"
+    (let [args (parse-args ["start-pipeline" "a" "123" "c" "--excludes-file=test/test_excludes.txt"])]
+      (is (= 2 (count (:excludes args))))
+      (is (= "foo" (.pattern (nth (:excludes args) 0))))
+      (is (= "bar" (.pattern (nth (:excludes args) 1)))))))
 
 (deftest create-tag
   (testing "create-tag"

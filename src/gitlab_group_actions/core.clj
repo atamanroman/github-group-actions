@@ -2,7 +2,8 @@
   (:require [gitlab-group-actions.cli :as cli]
             [gitlab-group-actions.pipelines :as pipelines]
             [gitlab-group-actions.tags :as tags]
-            [gitlab-group-actions.projects :as projects]) (:gen-class))
+            [gitlab-group-actions.projects :as projects])
+  (:gen-class))
 
 (defn -main [& raw] (let [opts (cli/parse-args raw)]
                       (cond

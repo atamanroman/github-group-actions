@@ -1,5 +1,6 @@
 (ns gitlab-group-actions.cli
-  (:use [docopt.core :only [docopt]]))
+  (:use [docopt.core :only [docopt]])
+  (:require [gitlab-group-actions.excludes :as excludes]))
 
 (defn- normalize [arg-map] {:access-token (arg-map "<access-token>")
                             :action       (cond (arg-map "start-pipeline") :start-pipeline
@@ -8,6 +9,7 @@
                             :branch       (cond (= (arg-map "--branch") ":default") :default
                                                 :else (arg-map "--branch"))
                             :dry-run      (or (arg-map "--dry-run") false)
+                            :excludes     (if (arg-map "--excludes-file") (excludes/from-file (arg-map "--excludes-file")))
                             :exit-status  (arg-map "exit-status")
                             :group-id     (if (arg-map "<group-id>") (Integer/parseInt (arg-map "<group-id>")))
                             :recursive    (or (arg-map "--recursive") false)
@@ -17,18 +19,21 @@
 (defn #^{:doc     "Gitlab Group Actions.
 
 Usage:
-  gl_ga start-pipeline <api-url> <group-id> <access-token> [-r -n -b=<branch>]
-  gl_ga create-tag <name> <message> <api-url> <group-id> <access-token> [-r -n -b=<branch>]
+  gl_ga start-pipeline <api-url> <group-id> <access-token> [-r -n -b=<branch> -x=<excludes_file>]
+  gl_ga create-tag <name> <message> <api-url> <group-id> <access-token> [-r -n -b=<branch> -x=<excludes_file>]
   gl_ga -h | --help
   gl_ga -v | --version
 
 Options:
-  -b=<branch> --branch=<branch>   Use the given branch (or default branch with the magic ':default' keyword)
-                                  for actions [default: :default].
-  -r, --recursive                 Apply actions to all children of the given group.
-  -n, --dry-run                   Don't issue any mutating actions and just log them.
-  -h, --help                      Show this screen.
-  -v, --version                   Show version."
+  -b=<branch>, --branch=<branch>      Use the given branch (or default branch with the magic ':default' keyword)
+                                      for actions [default: :default].
+  -r, --recursive                     Apply actions to all children of the given group.
+  -x=<file>, --excludes-file=<file>   Skip projects matching RegExes from <excludes_file> (one per line).
+                                      Excludes are applied against the whole project path (e.g. 'my-team/my-service')
+                                      and need to match fully.
+  -n, --dry-run                       Don't issue any mutating actions and just log them.
+  -h, --help                          Show this screen.
+  -v, --version                       Show version."
          :version "Gitlab Group Actions, version 0.1.0-SNAPSHOT"} ; TODO dynamic from project?
         parse-args [args]
   (let [arg-map (docopt (:doc (meta #'parse-args)) args)]
