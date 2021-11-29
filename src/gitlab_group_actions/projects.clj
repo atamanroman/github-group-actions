@@ -9,11 +9,12 @@
                                               :default_branch (:default_branch project)
                                               :url            (:web_url project)})))
 
-(defn- is-excluded [project exclude-regexes] (seq (filter (fn [re] (re-matches re (:path_with_namespace project))) exclude-regexes)))
-(defn- remove-excluded [projects exclude-regexes] (filter #(if (is-excluded % exclude-regexes)
-                                                             (do (println "Excluded:" (:path_with_namespace %))
-                                                                 false)
-                                                             true)
+(defn- is-excluded [project exclude-regexes] (seq (filter (fn [re] (if (re-matches re (:path_with_namespace project)) re)) exclude-regexes)))
+(defn- remove-excluded [projects exclude-regexes] (filter #(let [excludes (is-excluded % exclude-regexes)]
+                                                             (if excludes
+                                                               (do (println "Excluded:" (:path_with_namespace %) (str "(matches " excludes ")"))
+                                                                   false)
+                                                               true))
                                                           projects))
 
 (defn get-projects
