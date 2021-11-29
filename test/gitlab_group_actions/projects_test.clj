@@ -18,3 +18,8 @@
                            {:id 3 :path_with_namespace "baz/baz"}] [#"foo/.*" #"bar/.*"])]
         (is (= 1 (count projects)))
         (is (= 3 (:id (first projects))))))))
+
+(deftest get-target-branch-test
+  (testing "explicit branch wins over default branch"
+    (is (= "staging" (gitlab-group-actions.projects/get-target-branch {:default_branch "main"} "staging")))
+    (is (= "main" (gitlab-group-actions.projects/get-target-branch {:default_branch "main"} :default)))))

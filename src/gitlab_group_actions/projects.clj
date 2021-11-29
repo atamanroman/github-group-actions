@@ -32,4 +32,4 @@
 
 (defn get-target-branch [project cli-branch]
   (if
-   (not= (:branch cli-branch) :default) (:default_branch project) cli-branch))
+   (= cli-branch :default) (:default_branch project) cli-branch))
